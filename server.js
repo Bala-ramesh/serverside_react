@@ -53,14 +53,20 @@ app.use(cors({
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
-    secure: true, // Use SSL/TLS - highly recommended for Port 465
+    secure: true,
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS, // Ensure this is the 16-character App Password (no spaces)
+      pass: process.env.EMAIL_PASS,
     },
-    // Adding these timeouts helps prevent the ETIMEDOUT error
-    connectionTimeout: 10000, 
+    // FORCE IPV4 HERE
+    connectionTimeout: 10000,
     greetingTimeout: 10000,
+    socketTimeout: 10000,
+    dnsTimeout: 10000,
+    tls: {
+      // This helps if there are certificate mismatch issues
+      rejectUnauthorized: false 
+    }
   });
 
 // --- 4. THE SECURE ROUTE ---
