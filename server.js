@@ -27,8 +27,11 @@ const contactLimiter = rateLimit({
 const allowedOrigins = [
     'http://localhost:3000',   // Standard React (npm start)
     'http://localhost:5173',   // Standard Vite (npm run dev)
-    'http://127.0.0.1:3000'    // Some systems use IP instead of "localhost"
-  ];
+    'http://127.0.0.1:3000',    // Some systems use IP instead of "localhost"
+    'https://bala-ramesh.github.io',
+    'https://bala-ramesh.github.io/React_web' // <--- Add this!
+    ].filter(Boolean);
+
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -83,4 +86,8 @@ app.post('/send-email', contactLimiter, async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`Secure server running on port ${PORT}`));
+
+// Adding '0.0.0.0' allows Railway to route external traffic to your app
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is live and listening on port ${PORT}`);
+});
