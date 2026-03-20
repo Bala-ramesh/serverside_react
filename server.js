@@ -7,6 +7,8 @@ const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 require('dotenv').config();
 
+app.set('trust proxy', 1);
+
 // Setup DOMPurify to clean inputs
 const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
