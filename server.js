@@ -51,12 +51,17 @@ app.use(cors({
 
 // --- 3. NODEMAILER ---
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // Use SSL/TLS - highly recommended for Port 465
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS, // Ensure this is the 16-character App Password (no spaces)
+    },
+    // Adding these timeouts helps prevent the ETIMEDOUT error
+    connectionTimeout: 10000, 
+    greetingTimeout: 10000,
+  });
 
 // --- 4. THE SECURE ROUTE ---
 app.post('/send-email', contactLimiter, async (req, res) => {
