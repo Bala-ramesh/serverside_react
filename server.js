@@ -53,21 +53,26 @@ app.use(cors({
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
-    secure: true,
+    secure: true, // Port 465 MUST use secure: true
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-    // FORCE IPV4 HERE
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
+    // These settings prevent the 10s hang
+    connectionTimeout: 15000, 
+    greetingTimeout: 15000,
+    socketTimeout: 15000,
     dnsTimeout: 10000,
+    debug: true, // This will print more info to your Railway logs
+    logger: true, // This will show the actual SMTP conversation in logs
     tls: {
-      // This helps if there are certificate mismatch issues
-      rejectUnauthorized: false 
+      rejectUnauthorized: false, // Prevents certificate handshake errors
+      servername: 'smtp.gmail.com'
     }
   });
+  
+  // Force IPv4 again just to be safe
+  transporter.options.family = 4;
 
 // --- 4. THE SECURE ROUTE ---
 app.post('/send-email', contactLimiter, async (req, res) => {
